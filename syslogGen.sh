@@ -42,11 +42,9 @@ while [ 1 ]
 do
 	for i in $(seq 1 $COUNT)
 	do
-		# Fri Jan 10 15:00:06 2014
-		DATE=NOW=$(date +"%a %b %d %H:%M:%S %Y")
+		# Picks a random syslog message from the list.
 		RANDOM_MESSAGE=${MESSAGES[$RANDOM % ${#MESSAGES[@]} ]}
-		SYS_MESSAGE="%$RANDOM_MESSAGE"
-		$NC $DEST_IP -u 514 -w 0 <<< "<$PRIORITY>`env LANG=us_US.UTF-8 date "+%b %d %H:%M:%S"` $ORIG_IP service: $SYS_MESSAGE"
+		$NC $DEST_IP -u 514 -w 0 <<< "<$PRIORITY>`env LANG=us_US.UTF-8 date "+%b %d %H:%M:%S"` $ORIG_IP service: $RANDOM_MESSAGE"
 	done
 	sleep $SLEEP_SECS
 done
