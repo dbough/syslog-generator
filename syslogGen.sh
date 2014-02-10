@@ -36,7 +36,7 @@ COUNT=1
 # local5            168     169        170     171       172      173    174     175
 # local6            176     177        178     179       180      181    182     183
 # local7            184     185        186     187       188      189    190     191
-PRIORITY=188
+PRIORITIES=(0 1 2 3 4 5 6 7)
 
 while [ 1 ]
 do
@@ -44,6 +44,7 @@ do
 	do
 		# Picks a random syslog message from the list.
 		RANDOM_MESSAGE=${MESSAGES[$RANDOM % ${#MESSAGES[@]} ]}
+		PRIORITY=${PRIORITIES[$RANDOM % ${#PRIORITIES[@}]} ]}
 		$NC $DEST_IP -u 514 -w 0 <<< "<$PRIORITY>`env LANG=us_US.UTF-8 date "+%b %d %H:%M:%S"` $ORIG_IP service: $RANDOM_MESSAGE"
 	done
 	sleep $SLEEP_SECS
