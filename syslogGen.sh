@@ -44,7 +44,7 @@ do
 	do
 		# Picks a random syslog message from the list.
 		RANDOM_MESSAGE=${MESSAGES[$RANDOM % ${#MESSAGES[@]} ]}
-		PRIORITY=${PRIORITIES[$RANDOM % ${#PRIORITIES[@}]} ]}
+		PRIORITY=${PRIORITIES[$RANDOM % ${#PRIORITIES[@]} ]}
 		$NC $DEST_IP -u 514 -w 0 <<< "<$PRIORITY>`env LANG=us_US.UTF-8 date "+%b %d %H:%M:%S"` $ORIG_IP service: $RANDOM_MESSAGE"
 	done
 	sleep $SLEEP_SECS
