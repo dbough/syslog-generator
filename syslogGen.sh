@@ -1,11 +1,19 @@
 #!/bin/bash
+# -----------------------------------------------------------------------------
+#
+# Shell script to simulate syslog message from a source
+#       - Simulation involves port, facility and prority
+#
+# -----------------------------------------------------------------------------
 # Path to netcat
 NC="/bin/nc"
 # Where are we sending messages from / to?
-ORIG_IP="127.0.0.1"
-DEST_IP="127.0.0.11"
+ORIG_IPS=("10.1.2.3" "192.1.2.4" "172.1.3.4")
+# Multiple port inputs
+PORTS=("514" "10514" "10515")
+DEST_IP="127.0.0.1"
 # List of messages.
-MESSAGES=("Error Event" "Warning Event" "Info Event")
+MESSAGES=("Error Event Message1" "Warning Event key1=Value1" "Info Event Message3")
 # How long to wait in between sending messages.
 SLEEP_SECS=1
 # How many message to send at a time.
@@ -36,8 +44,11 @@ COUNT=1
 # local5            168     169        170     171       172      173    174     175
 # local6            176     177        178     179       180      181    182     183
 # local7            184     185        186     187       188      189    190     191
+
+#Change priority below to customise your simulation
 PRIORITIES=(0 1 2 3 4 5 6 7)
 
+#Unlimited loop
 while [ 1 ]
 do
 	for i in $(seq 1 $COUNT)
@@ -45,7 +56,9 @@ do
 		# Picks a random syslog message from the list.
 		RANDOM_MESSAGE=${MESSAGES[$RANDOM % ${#MESSAGES[@]} ]}
 		PRIORITY=${PRIORITIES[$RANDOM % ${#PRIORITIES[@]} ]}
-		$NC $DEST_IP -u 514 -w 0 <<< "<$PRIORITY>`env LANG=us_US.UTF-8 date "+%b %d %H:%M:%S"` $ORIG_IP service: $RANDOM_MESSAGE"
+		ORIG_IP=${ORIG_IPS[$RANDOM % ${#ORIG_IPS[@]} ]}
+		PORT=${PORTS[$RANDOM % ${#PORTS[@]} ]}
+		$NC $DEST_IP -u $PORT -w 1 <<< "<$PRIORITY>`env LANG=us_US.UTF-8 date "+%b %d %H:%M:%S"` $ORIG_IP service: $RANDOM_MESSAGE"
 	done
 	sleep $SLEEP_SECS
 done
